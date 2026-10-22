@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Birthday</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ 1. THEME TOKENS (edit colors here) ============ */
+:root{
+  --bg:#fff4ec; --bg2:#ffe3d6; --card:#ffffffcc; --text:#3b2231; --muted:#7d5a6a;
+  --accent:#e0556f; --accent2:#f2a65a; --glow:#e0556f55; --border:#e0556f33;
+  --serif:'Playfair Display',Georgia,serif; --sans:'DM Sans',system-ui,-apple-system,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1d0f1c; --bg2:#35162f; --card:#2a1527cc; --text:#fff0e8; --muted:#d6b2c0;
+    --accent:#ff7d93; --accent2:#ffc27a; --glow:#ff7d9355; --border:#ff7d9340;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1d0f1c; --bg2:#35162f; --card:#2a1527cc; --text:#fff0e8; --muted:#d6b2c0;
+  --accent:#ff7d93; --accent2:#ffc27a; --glow:#ff7d9355; --border:#ff7d9340;
+}
+
+/* ============ 2. BASE ============ */
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:linear-gradient(160deg,var(--bg),var(--bg2));background-attachment:fixed;
+  color:var(--text);font-family:var(--sans);line-height:1.6;overflow-x:hidden}
+h1,h2,h3{font-family:var(--serif);margin:0}
+section{position:relative;z-index:1;padding:5rem 1.25rem;max-width:1000px;margin:0 auto}
+.title{text-align:center;font-size:clamp(1.8rem,6vw,2.6rem);margin-bottom:.4rem}
+.sub{text-align:center;color:var(--muted);margin:0 0 2.5rem}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
+.reveal.show{opacity:1;transform:none}
+
+/* ============ 3. HERO ============ */
+#hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.eyebrow{letter-spacing:.3em;text-transform:uppercase;font-size:.8rem;color:var(--accent)}
+#hero h1{font-size:clamp(3rem,15vw,7rem);line-height:1.05;margin:.6rem 0;
+  background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent));background-size:200% auto;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+@keyframes shine{to{background-position:200% center}}
+#hero p{max-width:30rem;color:var(--muted);font-size:1.1rem;margin:0 0 2rem}
+.btn{font:500 1rem var(--sans);color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border:0;border-radius:99px;padding:.9rem 2rem;cursor:pointer;box-shadow:0 8px 28px var(--glow);
+  transition:transform .25s,box-shadow .25s}
+.btn:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 12px 34px var(--glow)}
+.hint{position:absolute;bottom:1.5rem;font-size:1.4rem;animation:bob 2s ease-in-out infinite;color:var(--accent)}
+@keyframes bob{50%{transform:translateY(8px)}}
+
+/* ============ 4. TIMELINE ============ */
+.timeline{position:relative;display:grid;gap:1.5rem}
+.timeline::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;
+  background:linear-gradient(var(--accent),var(--accent2));opacity:.4;transform:translateX(-50%)}
+.mem{width:calc(50% - 1.5rem);background:var(--card);border:1px solid var(--border);border-radius:20px;
+  overflow:hidden;backdrop-filter:blur(8px);transition:transform .35s,box-shadow .35s}
+.mem:nth-child(even){margin-left:auto}
+.mem:hover{transform:translateY(-6px);box-shadow:0 14px 36px var(--glow)}
+.mem .photo{aspect-ratio:4/3;display:grid;place-items:center;font-size:3rem;overflow:hidden;
+  background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff}
+.mem .photo img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.mem:hover .photo img,.mem:hover .photo span{transform:scale(1.12)}
+.photo span{transition:transform .6s}
+.mem .body{padding:1rem 1.2rem 1.2rem}
+.mem .date{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent)}
+.mem h3{font-size:1.25rem;margin:.2rem 0}
+.mem p{margin:0;color:var(--muted);font-size:.95rem}
+@media (max-width:680px){
+  .timeline::before{left:12px}
+  .mem{width:calc(100% - 34px);margin-left:34px!important}
+}
+
+/* ============ 5. FLIP CARDS ============ */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem}
+.flip{aspect-ratio:1;perspective:900px;cursor:pointer;border:0;background:none;padding:0;font:inherit;color:inherit}
+.inner{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d}
+.flip.on .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:20px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.9rem;text-align:center;
+  border:1px solid var(--border)}
+.front{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-family:var(--serif);font-size:1.15rem}
+.front i{font-style:normal;font-size:2rem;margin-bottom:.3rem}
+.back{background:var(--card);transform:rotateY(180deg);font-size:.88rem;color:var(--text);backdrop-filter:blur(8px)}
+
+/* ============ 6. CAKE ============ */
+#cake{text-align:center}
+.cake-wrap{display:inline-block;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.flame{transform-origin:100px 52px;animation:flick .35s ease-in-out infinite alternate;transition:opacity .4s}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.08,1.15) rotate(3deg)}}
+.out .flame{opacity:0;animation:none}
+.smoke{opacity:0}
+.out .smoke{animation:rise 2s ease-out}
+@keyframes rise{0%{opacity:.7;transform:translateY(0)}100%{opacity:0;transform:translateY(-40px)}}
+#msg{min-height:2.2em;margin:1rem 0 .5rem;font-family:var(--serif);font-size:1.4rem;color:var(--accent)}
+.ghost{background:none;color:var(--accent);border:1px solid var(--accent);box-shadow:none;padding:.5rem 1.2rem;font-size:.9rem}
+
+/* ============ 7. MUSIC TOGGLE ============ */
+#music{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:14px;z-index:20;width:46px;height:46px;
+  border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--accent);font-size:1.2rem;
+  cursor:pointer;backdrop-filter:blur(8px);transition:transform .25s}
+#music:hover{transform:scale(1.1)}
+#music.playing{animation:pulse 2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px transparent;} 0%{box-shadow:0 0 0 0 var(--glow)}}
+footer{position:relative;z-index:1;text-align:center;padding:2rem 1rem 3rem;color:var(--muted);font-size:.9rem}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+
+<!-- ============ HERO ============ -->
+<section id="hero">
+  <div class="eyebrow">Wishing you the happiest birthday My Dear pichi</div>
+  <h1 id="name">Half Brain🧠💝</h1>
+  <p id="greeting"></p>
+  <button class="btn" id="begin">Begin the Journey ✨</button>
+  <div class="hint">↓</div>
+</section>
+
+<!-- ============ MEMORY LANE ============ -->
+<section id="memories">
+  <h2 class="title reveal">Memory Lane</h2>
+  <p class="sub reveal">A few of my favorite chapters of us</p>
+  <div class="timeline" id="timeline"></div>
+</section>
+
+<!-- ============ REASONS ============ -->
+<section id="reasons">
+  <h2 class="title reveal">Reasons You’re Special</h2>
+  <p class="sub reveal">Tap a card to read the note inside</p>
+  <div class="grid" id="grid"></div>
+</section>
+
+<!-- ============ CAKE ============ -->
+<section id="cake">
+  <h2 class="title reveal">Make a Wish</h2>
+  <p class="sub reveal">Tap the candle to blow it out</p>
+  <div class="cake-wrap reveal" id="cakeWrap" role="button" tabindex="0" aria-label="Blow out the candle">
+    <svg viewBox="0 0 200 210" width="260" height="273" aria-hidden="true">
+      <ellipse cx="100" cy="198" rx="92" ry="9" fill="#00000022"/>
+      <rect x="20" y="130" width="160" height="62" rx="10" fill="#c9506b"/>
+      <rect x="35" y="88" width="130" height="50" rx="10" fill="#f2a65a"/>
+      <path d="M20 140q10 14 20 0t20 0 20 0 20 0 20 0 20 0 20 0 20 0v-12H20z" fill="#fff4ec"/>
+      <path d="M35 98q8 12 16 0t16 0 16 0 16 0 16 0 16 0 16 0v-12H35z" fill="#fff4ec"/>
+      <rect x="95" y="58" width="10" height="34" rx="3" fill="#7ec8e3"/>
+      <rect x="95" y="68" width="10" height="5" fill="#fff" opacity=".7"/>
+      <rect x="95" y="80" width="10" height="5" fill="#fff" opacity=".7"/>
+      <g class="flame"><ellipse cx="100" cy="42" rx="9" ry="15" fill="#ffb347"/><ellipse cx="100" cy="46" rx="4.5" ry="8" fill="#fff3b0"/></g>
+      <g class="smoke"><path d="M100 50q-6-10 0-18t0-16" stroke="#999" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+    </svg>
+  </div>
+  <div id="msg" aria-live="polite"></div>
+  <button class="btn ghost" id="relight" hidden>Relight the candle</button>
+</section>
+
+<footer id="footer"></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.2/confetti.browser.min.js"></script>
+<script>
+/* ============ CONFIG: CUSTOMIZE EVERYTHING HERE ============ */
+const CONFIG = {
+  name: "[Insert Name]",
+  greeting: "Happiest Birthday to the most special person in my life.",
+  wish: "May every wish you make come true 💖",
+  footer: "Made with love, just for you.",
+  /* photo: leave "" for a placeholder, or put an image path/URL, e.g. "photos/us.jpg" */
+  memories: [
+    {date:"The Beginning", title:"The day we met", text:"From random college class mate to my daily routine, you quietly became my favorite person. Today, you are my ultimate comfort zone and the one place I can be 100% myself. most special one", icon:"🌱", photo:"The.png"},
+    {date:"october 2025", title:"Our first adventure", text:"Our first adventure together! From BRAOU and Peddamma temple to Koti, we roamed everywhere and enjoyed every second. An unforgettable day. here’s to many more adventures like this with you......", icon:"🌅", photo:"adv.png"},
+    {date:"our first fight", title:"The unexpected fight", text:"Our first big fight, which was totally my fault, led to you avoiding me for three long weeks. Those were the hardest weeks, and I was so scared of losing you. But we got through it, and it only proved how irreplaceable you are to me. I’m so glad we never let that keep us apart", icon:"⚔️", photo:"figh.png"},
+    {date:"little sweet moments", title:"Every little thing", text:"It's the little things that mean the most to me. Our promise to never break this bond after college, the pen you gave me that I still keep safely, and the fun of our truth or dare games. Honestly, seeing you eat dahi puri is one of my happiest moments, you look so cute! These tiny memories make me so happy.", icon:"🌙", photo:"evry.png"},
+    {date:"Today", title:"Another year of you", text:"Here’s to another year of you being my favorite human and my biggest comfort zone! From silly laughs to endless adventures, I’m so grateful to have you in my corner. Happy Birthday to the most special person—let’s make this year our best one yet!", icon:"🎂", photo:"next.png"}
+  ],
+  reasons: [
+    {front:"Your Smile", icon:"😊", note:"It lights up every room you walk into."},
+    {front:"Your Heart", icon:"💗", note:"You care so deeply, and it shows in everything you do."},
+    {front:"Your Laugh", icon:"🎶", note:"My favorite sound in the entire world."},
+    {front:"Your Strength", icon:"🌟", note:"You make hard things look graceful."},
+    {front:"your eyes", icon:"👀", note:"i never said that but your eyes are preety."},
+    {front:"You, Simply", icon:"✨", note:"Because you’re exactly you, and that’s everything."}
+  ]
+};
+
+/* ============ RENDER CONTENT ============ */
+const $ = s => document.querySelector(s);
+document.title = "Happy Birthday " + CONFIG.name;
+$("#name").textContent = CONFIG.name;
+$("#greeting").textContent = CONFIG.greeting;
+$("#footer").textContent = CONFIG.footer;
+
+$("#timeline").innerHTML = CONFIG.memories.map(m => `
+  <article class="mem reveal">
+    <div class="photo">${m.photo ? `<img src="${m.photo}" alt="${m.title}">` : `<span>${m.icon}</span>`}</div>
+    <div class="body"><div class="date">${m.date}</div><h3>${m.title}</h3><p>${m.text}</p></div>
+  </article>`).join("");
+
+$("#grid").innerHTML = CONFIG.reasons.map(r => `
+  <button class="flip reveal" aria-label="${r.front}">
+    <div class="inner">
+      <div class="face front"><i>${r.icon}</i>${r.front}</div>
+      <div class="face back">${r.note}</div>
+    </div>
+  </button>`).join("");
+document.querySelectorAll(".flip").forEach(c => c.addEventListener("click", () => c.classList.toggle("on")));
+
+/* ============ SCROLL + REVEAL ============ */
+$("#begin").addEventListener("click", () => $("#memories").scrollIntoView({behavior:"smooth"}));
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("show"); io.unobserve(e.target); } }), {threshold:.15});
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+/* ============ FLOATING PARTICLES BACKGROUND ============ */
+const cv = $("#bg"), ctx = cv.getContext("2d");
+let W, H, parts = [];
+const glyphs = ["♥","✦","•","✧"];
+function resize(){ W = cv.width = innerWidth; H = cv.height = innerHeight; }
+addEventListener("resize", resize); resize();
+function spawn(initial){
+  return {x:Math.random()*W, y:initial ? Math.random()*H : H+20, s:6+Math.random()*14,
+    v:.25+Math.random()*.6, d:Math.random()*6.28, g:glyphs[Math.floor(Math.random()*glyphs.length)],
+    a:.15+Math.random()*.4, hue:Math.random()<.5 ? 0 : 1};
+}
+for (let i=0;i<(W<600?28:55);i++) parts.push(spawn(true));
+function frame(t){
+  ctx.clearRect(0,0,W,H);
+  const cs = getComputedStyle(document.documentElement);
+  const cols = [cs.getPropertyValue("--accent").trim(), cs.getPropertyValue("--accent2").trim()];
+  parts.forEach((p,i) => {
+    p.y -= p.v; p.x += Math.sin(t/1500 + p.d)*.35;
+    if (p.y < -30) parts[i] = spawn(false);
+    ctx.globalAlpha = p.a; ctx.fillStyle = cols[p.hue]; ctx.shadowColor = cols[p.hue]; ctx.shadowBlur = 14;
+    ctx.font = p.s + "px serif"; ctx.fillText(p.g, p.x, p.y);
+  });
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ============ CAKE & CONFETTI ============ */
+const cake = $("#cakeWrap"), msg = $("#msg"), relight = $("#relight");
+function blowOut(){
+  if (cake.classList.contains("out")) return;
+  cake.classList.add("out");
+  msg.textContent = CONFIG.wish;
+  relight.hidden = false;
+  if (window.confetti){
+    const end = Date.now() + 1800;
+    confetti({particleCount:140, spread:90, origin:{y:.6}});
+    (function burst(){
+      confetti({particleCount:5, angle:60, spread:60, origin:{x:0, y:.7}});
+      confetti({particleCount:5, angle:120, spread:60, origin:{x:1, y:.7}});
+      if (Date.now() < end) requestAnimationFrame(burst);
+    })();
+  }
+}
+cake.addEventListener("click", blowOut);
+cake.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); blowOut(); } });
+relight.addEventListener("click", () => {
+  cake.classList.remove("out"); msg.textContent = ""; relight.hidden = true;
+});
+
+/* ============ MUSIC: soft music-box melody via Web Audio (no files needed) ============ */
+const mBtn = $("#music");
+let ac, timer, step = 0, playing = false, master;
+const scale = [261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 659.25];  // C major pentatonic-ish
+const tune = [0,2,4,2, 3,4,5,4, 2,3,4,2, 0,2,3,1];                     // edit to change the melody
+function note(freq, when, dur, vol){
+  const o = ac.createOscillator(), g = ac.createGain();
+  o.type = "triangle"; o.frequency.value = freq;
+  g.gain.setValueAtTime(0, when);
+  g.gain.linearRampToValueAtTime(vol, when+.02);
+  g.gain.exponentialRampToValueAtTime(.0001, when+dur);
+  o.connect(g); g.connect(master); o.start(when); o.stop(when+dur+.05);
+}
+function tick(){
+  const t = ac.currentTime + .05, i = tune[step % tune.length];
+  note(scale[i], t, 1.4, .18);
+  if (step % 4 === 0) note(scale[i]/2, t, 2.4, .1);   // gentle bass
+  step++;
+}
+mBtn.addEventListener("click", () => {
+  if (!ac){ ac = new (window.AudioContext || window.webkitAudioContext)(); master = ac.createGain(); master.gain.value = .6; master.connect(ac.destination); }
+  playing = !playing;
+  if (playing){ ac.resume(); tick(); timer = setInterval(tick, 520); }
+  else { clearInterval(timer); }
+  mBtn.classList.toggle("playing", playing);
+  mBtn.textContent = playing ? "♫" : "♪";
+});
+</script>
+</body>
+</html>

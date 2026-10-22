@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A Surprise For You</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Floating particles background -->
+<canvas id="bg"></canvas>
+
+<!-- ================= GATEWAY QUIZ ================= -->
+<div id="gate">
+  <div class="card" id="card">
+
+    <!-- Quiz view -->
+    <div id="quiz">
+      <div class="eyebrow" id="gateEyebrow">Step 1 of 3</div>
+      <h1 class="gate-title">Identity Verification for Someone Extra Special</h1>
+      <div class="bar"><div id="barFill"></div></div>
+      <h2 class="q" id="q"></h2>
+      <div id="answer"></div>
+      <p class="fb" id="fb" aria-live="polite"></p>
+    </div>
+
+    <!-- Unlock view (shown after the last question) -->
+    <div id="done" hidden>
+      <div class="padlock" id="padlock">
+        <svg viewBox="0 0 64 64" width="96" height="96" aria-hidden="true">
+          <path id="shackle" d="M20 30V22a12 12 0 0 1 24 0v8" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+          <rect x="12" y="30" width="40" height="28" rx="7" fill="currentColor"/>
+          <circle cx="32" cy="43" r="4" fill="#fff"/>
+        </svg>
+      </div>
+      <h2 class="q" id="doneText"></h2>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.2/confetti.browser.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
